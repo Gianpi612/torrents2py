@@ -62,7 +62,7 @@ for index, result in enumerate(results, start=1):
 If you wish to search your torrent with specific filters, such as minimum seeds, minimum peers, page, and maximum pages, you can achieve this by:
 
 ```python
-# Filters, this is optional
+# Filters, as of torrents2py v0.1 these are all the suppported filters:
 filters = {
     'min_seeds': 2,     # Filter torrents with a minimum of 2 seeds - Default is 0
     'min_peers': 2,     # Filter torrents with a minimum of 2 peers - Default is 0
