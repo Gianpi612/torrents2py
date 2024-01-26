@@ -1,10 +1,10 @@
-# torrentz2py
+# torrents2py
 
-Torrentz2Py is a simple Python package for searching and retrieving torrent details from Torrentz2.nz. Easily access and manage torrent information in your Python projects.
+Torrents2py is a simple Python package for searching and retrieving torrent details from Torrentz2.nz. Easily access and manage torrent information in your Python projects.
 
 # Overview
 
-**torrentz2py** is a Python package designed to simplify the process of searching for and retrieving information about torrents from the Torrentz2 website. It provides a convenient interface for programmatically interacting with Torrentz2, allowing users to search for torrents and fetch details based on specific criteria.
+**torrents2py** is a Python package designed to simplify the process of searching for and retrieving information about torrents from the Torrentz2 website. It provides a convenient interface for programmatically interacting with Torrentz2, allowing users to search for torrents and fetch details based on specific criteria.
 
 ## Key Features
 
@@ -21,13 +21,13 @@ Torrentz2Py is a simple Python package for searching and retrieving torrent deta
 To install the package, run the following command:
 
 ```bash
-pip install torrentz2py
+pip install torrents2py
 ```
 
 # Usage
 If you wish to search for torrents, it's as straightforward as:
 ```python
-from torrentz2py import search_torrents
+from torrents2py import search_torrents
 
 # The search_torrents function returns a tuple with two elements:
 # - results: a list of dictionaries, each containing information about a torrent,
@@ -41,7 +41,7 @@ results, magnet_links = search_torrents("Search input")
 If you'd like to print all information about the found torrents, you can do the following:
 
 ```python
-from torrentz2py import search_torrents
+from torrents2py import search_torrents
 
 # Perform a search without filters
 results, magnet_links = search_torrents("Search input")
