@@ -25,7 +25,7 @@ pip install torrentz2py
 ```
 
 # Usage
-If we want to search for torrents it's simple as:
+If you wish to search for torrents, it's as straightforward as:
 ```python
 from torrentz2py import search_torrents
 
@@ -33,11 +33,13 @@ from torrentz2py import search_torrents
 # - results: a list of dictionaries, each containing information about a torrent,
 #            including Title, Uploaded, Size, Seeds, Peers, etc.
 # - magnet_links: a list of magnet links corresponding to each torrent in the results.
+
 results, magnet_links = search_torrents("Search input")
 
 ```
 
-If we want to print the informations about the torrents we found we could do:
+If you'd like to print all information about the found torrents, you can do the following:
+
 ```python
 from torrentz2py import search_torrents
 
@@ -57,7 +59,7 @@ for index, result in enumerate(results, start=1):
 ```
 
 ## Search with filters
-If we wanted to search for torrents with specific filters, such as minimum seeds, minimum peers, page and maximum pages we could do:
+If you wish to search your torrent with specific filters, such as minimum seeds, minimum peers, page, and maximum pages, you can achieve this by:
 
 ```python
 # Filters, this is optional
