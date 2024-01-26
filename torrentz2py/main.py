@@ -46,6 +46,7 @@ def get_torrents(search_query, current_page=1, min_seeds=0, min_peers=0, max_pag
     torrent_magnet_links = []
 
     try:
+        # Iterate through each page in the specified range or just the current page if max_pages is not set
         for page in range(current_page, current_page + (max_pages or 1)):
             current_url = f"{base_url}&page={page}"
             response = requests.get(current_url)
@@ -58,13 +59,16 @@ def get_torrents(search_query, current_page=1, min_seeds=0, min_peers=0, max_pag
             if not torrent_entries:
                 break
 
+            # Iterate through each torrent entry in torrent_entries
             for entry in torrent_entries:
+                # Extract title, upload date, size, seeds, and peers information from the entry
                 title = entry.find('a', {'target': '_blank'}).text.strip()
                 uploaded = entry.find('span', {'title': True}).text.strip()
                 size = entry.find_all('span')[2].text.strip()
                 seeds = convert_to_int(entry.find_all('span')[3].text.strip())
                 peers = convert_to_int(entry.find_all('span')[4].text.strip())
 
+                # Find magnet link
                 magnet_span = entry.find('span')
                 if magnet_span and magnet_span.find('a'):
                     magnet_link = magnet_span.find('a')['href']
@@ -82,19 +86,16 @@ def get_torrents(search_query, current_page=1, min_seeds=0, min_peers=0, max_pag
                         torrent_magnet_links.append(magnet_link)
 
     except requests.exceptions.RequestException as e:
-        # Handle exceptions related to HTTP requests
         print(f"Error in the HTTP request: {e}\n"
               f"This error can only mean 2 things:\n"
               f"1. You don't have internet access\n"
               f"2. Torrentz2 is currently down\n")
 
     except (AttributeError, TypeError) as e:
-        # Handle exceptions related to HTML parsing
         print(f"Error parsing, the structure of Torrentz2 might have changed: {e}\n"
               f"If you encounter this error, please open a GitHub issue.")
 
     except Exception as e:
-        # Handle other unexpected exceptions
         print(f"Unexpected error: {e}\n"
               f"If you encounter this error, please open a GitHub issue.")
 
@@ -131,6 +132,5 @@ def search_torrents(search_query, filters=None):
         return torrent_details, internal_magnet_links
 
     except Exception as e:
-        # Handle general exceptions
         print(f"Error during the search for torrents: {e}")
         return [], []
