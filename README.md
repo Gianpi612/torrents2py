@@ -25,17 +25,24 @@ pip install torrentz2py
 ```
 
 # Usage
-This example demonstrates how to use the torrentz2py package to search for torrents and print information such as title, upload date, size, seeds, peers and magnet links.
+If we want to search for torrents it's simple as:
 ```python
 from torrentz2py import search_torrents
-
-# Perform a search without filters
-results, magnet_links = search_torrents("Search input")
 
 # The search_torrents function returns a tuple with two elements:
 # - results: a list of dictionaries, each containing information about a torrent,
 #            including Title, Uploaded, Size, Seeds, Peers, etc.
 # - magnet_links: a list of magnet links corresponding to each torrent in the results.
+results, magnet_links = search_torrents("Search input")
+
+```
+
+If we want to print the informations about the torrents we found we could do:
+```python
+from torrentz2py import search_torrents
+
+# Perform a search without filters
+results, magnet_links = search_torrents("Search input")
 
 # Print Title, upload time, size, seeds, peers and magnet_links
 print("\nSearch Results:")
