@@ -27,7 +27,6 @@ pip install torrentz2py
 ```
 
 # Usage
-Basic torrent search
 This example demonstrates how to use the torrentz2py package to search for torrents and retrieve information such as title, upload date, size, seeds, peers and magnet links.
 ```python
 from torrentz2py import search_torrents
