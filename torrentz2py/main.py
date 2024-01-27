@@ -1,33 +1,10 @@
 import requests
 from bs4 import BeautifulSoup
+from torrents2py.utils import convert_to_int, convert_to_bytes
 
 
-def convert_to_int(value):
-    """
-    Convert a string representation of a numerical value to an integer.
-
-    This function is designed for parsing and converting numerical values
-    representing the number of seeds or peers within Torrentz2 torrent listings.
-    It handles cases where the number of seeds/peers is suffixed with 'K' (representing a thousand).
-    For example, '1.3K' will be converted to 1300. If the conversion is not possible,
-    it returns 0.
-
-    Parameters:
-    - value (str): The input string to be converted.
-
-    Returns:
-    - int: The converted integer value.
-    """
-    if 'K' in value:
-        return float(value[:-1]) * 1000
-    else:
-        try:
-            return int(value)
-        except ValueError:
-            return 0
-
-
-def get_torrents(search_query, current_page=1, min_seeds=0, min_peers=0, max_pages=None):
+def get_torrents(search_query, current_page=1, min_seeds=0, min_peers=0, max_pages=None, min_size=None, max_size=None,
+                 exclude_keywords=None):
     """
     Get torrent details and magnet links from Torrentz2.
 
@@ -37,6 +14,9 @@ def get_torrents(search_query, current_page=1, min_seeds=0, min_peers=0, max_pag
     - min_seeds (int): The minimum number of seeds for filtering (default is 0).
     - min_peers (int): The minimum number of peers for filtering (default is 0).
     - max_pages (int): The maximum number of pages to retrieve (default is None, which fetches 1 page).
+    - min_size (str): The minimum file size (e.g., '1GB').
+    - max_size (str): The maximum file size (e.g., '5GB').
+    - exclude_keywords (list): List of keywords to exclude from results.
 
     Returns:
     - tuple: A tuple containing a list of torrent details and a list of magnet links.
@@ -68,13 +48,20 @@ def get_torrents(search_query, current_page=1, min_seeds=0, min_peers=0, max_pag
                 seeds = convert_to_int(entry.find_all('span')[3].text.strip())
                 peers = convert_to_int(entry.find_all('span')[4].text.strip())
 
+                # Check if the title contains any excluded keywords
+                if exclude_keywords and any(keyword.lower() in title.lower() for keyword in exclude_keywords):
+                    continue  # Skip this entry if it contains excluded keywords
+
                 # Find magnet link
                 magnet_span = entry.find('span')
                 if magnet_span and magnet_span.find('a'):
                     magnet_link = magnet_span.find('a')['href']
 
-                    # Apply filters on seeds and peers
-                    if seeds >= min_seeds and peers >= min_peers:
+                    # Apply filters on seeds, peers, and file size
+                    file_size_bytes = convert_to_bytes(size)
+                    if (min_size is None or file_size_bytes >= convert_to_bytes(min_size)) and (
+                            max_size is None or file_size_bytes <= convert_to_bytes(
+                        max_size)) and seeds >= min_seeds and peers >= min_peers:
                         torrent_details.append({
                             "Title": title,
                             "Uploaded": uploaded,
@@ -108,7 +95,7 @@ def search_torrents(search_query, filters=None):
 
     Parameters:
     - search_query (str): The search query for torrents.
-    - filters (dict): Dictionary of filters, including page, min_seeds, min_peers, and max_pages.
+    - filters (dict): Dictionary of filters, including page, min_seeds, min_peers, max_pages, min_size, max_size, and exclude_keywords.
 
     Returns:
     - tuple: A tuple containing a list of torrent details and a list of magnet links.
@@ -120,10 +107,14 @@ def search_torrents(search_query, filters=None):
     min_seeds = filters.get('min_seeds', 0)
     min_peers = filters.get('min_peers', 0)
     max_pages = filters.get('max_pages', None)
+    min_size = filters.get('min_size')
+    max_size = filters.get('max_size')
+    exclude_keywords = filters.get('exclude_keywords')
 
     try:
         torrent_details, internal_magnet_links = get_torrents(
-            search_query, page, min_seeds, min_peers, max_pages
+            search_query, page, min_seeds, min_peers, max_pages, min_size=min_size, max_size=max_size,
+            exclude_keywords=exclude_keywords
         )
 
         if not torrent_details:
