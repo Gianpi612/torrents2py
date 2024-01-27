@@ -59,16 +59,27 @@ for index, result in enumerate(results, start=1):
 ```
 
 ## Search with filters
-If you wish to search your torrent with specific filters, such as minimum seeds, minimum peers, page, and maximum pages, you can achieve this by:
+If you wish to search your torrent with specific filters, such as minimum seeds, minimum peers, page, maximum pages and more you can achieve this by:
 
 ```python
-# Filters, as of torrents2py v0.1 these are all the suppported filters:
+# Filters, as of torrents2py v0.2 these are all the suppported filters:
 filters = {
-    'min_seeds': 2,     # Filter torrents with a minimum of 2 seeds - Default is 0
-    'min_peers': 2,     # Filter torrents with a minimum of 2 peers - Default is 0
-    'page': 1,          # Specify the page number for torrent search results - Default is 1
-    'max_pages': 5,     # Set the maximum number of pages to retrieve for torrent search results
-                        # - If max page is not provided it will show only 1 page of torrents
+    # Filter torrents with a minimum of 2 seeds - Default is 0
+    'min_seeds': 2,
+    # Filter torrents with a minimum of 2 peers - Default is 0
+    'min_peers': 2,
+    # Filter torrents with a minimum of 7 GB - Default is 0 bites
+    # both min_size and max_size support B, KB, MB, GB, TB. (case-insensitive as shown)
+    'min_size': '7Gb',
+    # Filter torrents with a maximum of 10 GB - Default is unlimited
+    'max_size': '10gB',
+    # Specify the page number for torrent search results - Default is 1
+    'page': 1,
+    # Set the maximum number of pages to retrieve for torrent search results
+    # - If max page is not provided it will only fetch 1 page of torrents
+    'max_pages': 50,
+    # Exclude specific words from the search
+    'exclude_keywords': ['bella', "ciao"],  
 }
 
 # Pass filters to search_torrents to perform a search with the specified filters
