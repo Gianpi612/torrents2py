@@ -14,8 +14,6 @@ Torrents2py is a simple Python package for searching and retrieving torrent deta
 
 - **Retrieve Torrent Details:** Obtain details for each matching torrent, including title, upload date, size, seeds, peers, and magnet link.
 
-- **Magnet Links:** Retrieve magnet links for found torrents, simplifying downloads.
-
 ## Installation
 
 To install the package, run the following command:
@@ -34,7 +32,7 @@ from torrents2py import search_torrents
 #            including Title, Uploaded, Size, Seeds, Peers, etc.
 # - magnet_links: a list of magnet links corresponding to each torrent in the results.
 
-results, magnet_links = search_torrents("Search input")
+results = search_torrents("Search input")
 
 ```
 
@@ -44,7 +42,7 @@ If you'd like to print all information about the found torrents, you can do the 
 from torrents2py import search_torrents
 
 # Perform a search without filters
-results, magnet_links = search_torrents("Search input")
+results = search_torrents("Search input")
 
 # Print Title, upload time, size, seeds, peers and magnet_links
 print("\nSearch Results:")
@@ -87,7 +85,7 @@ filters = {
 }
 
 # Perform a search with the specified filters
-results, magnet_links = search_torrents("Search input", filters)
+results = search_torrents("Search input", filters)
 
 print("\nFiltered Search Results:")
 for index, result in enumerate(results, start=1):
