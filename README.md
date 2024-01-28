@@ -62,7 +62,7 @@ for index, result in enumerate(results, start=1):
 If you wish to search your torrent with specific filters, such as minimum seeds, minimum peers, page, maximum pages and more you can achieve this by:
 
 ```python
-# Filters, as of torrents2py v0.2 these are all the suppported filters:
+# Filters, as of torrents2py v0.5 these are all the suppported filters:
 filters = {
     # Filter torrents with a minimum of 2 seeds - Default is 0
     'min_seeds': 2,
@@ -79,10 +79,14 @@ filters = {
     # - If max page is not provided it will only fetch 1 page of torrents
     'max_pages': 50,
     # Exclude specific words from the search
-    'exclude_keywords': ['bella', "ciao"],  
+    'exclude_keywords': ['bella', 'ciao'],
+    # Sort by seeds, peers and size (supports only 1 of them) - Default is None
+    'sort_by': 'size',
+    # Sort order, you can pass 'desc' for descending and 'asc' for ascending - Default is None
+    'sort_order': 'desc'
 }
 
-# Pass filters to search_torrents to perform a search with the specified filters
+# Perform a search with the specified filters
 results, magnet_links = search_torrents("Search input", filters)
 
 print("\nFiltered Search Results:")
@@ -94,6 +98,7 @@ for index, result in enumerate(results, start=1):
           f"   Seeds:    {result['Seeds']}\n"
           f"   Peers:    {result['Peers']}\n"
           f"   Magnet Link: {magnet_links[index - 1]}\n")
+
 
 ```
 
