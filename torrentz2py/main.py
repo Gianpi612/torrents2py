@@ -5,6 +5,24 @@ from torrents2py.utils import convert_to_int, convert_to_bytes
 
 def get_torrents(search_query, current_page=1, min_seeds=0, min_peers=0, max_pages=None, min_size=None, max_size=None,
                  exclude_keywords=None, sort_by=None, sort_order=None):
+    """
+    Get torrent details and magnet links from Torrentz2. From torrents2py v0.5+ magnet links and torrents details are stored in the same dictionary
+
+    Parameters:
+    - search_query (str): The search query for torrents.
+    - current_page (int): The current page of search results (default is 1).
+    - min_seeds (int): The minimum number of seeds for filtering (default is 0).
+    - min_peers (int): The minimum number of peers for filtering (default is 0).
+    - max_pages (int): The maximum number of pages to retrieve (default is None, which fetches 1 page).
+    - min_size (str): The minimum file size (e.g., '1GB').
+    - max_size (str): The maximum file size (e.g., '5GB').
+    - exclude_keywords (list): List of keywords to exclude from results.
+    - sort_by (str): The field by which to sort the results (e.g., 'seeds').
+    - sort_order (str): The order of sorting, either 'asc' (ascending) or 'desc' (descending).
+
+    Returns:
+    - tuple: A tuple containing a list of torrent details and a list of magnet links.
+    """
     base_url = 'https://torrentz2.nz/search?q=' + search_query
     torrent_details = []
 
@@ -75,6 +93,16 @@ def get_torrents(search_query, current_page=1, min_seeds=0, min_peers=0, max_pag
 
 
 def search_torrents(search_query, filters=None):
+    """
+    Search for torrents with optional filters.
+
+    Parameters:
+    - search_query (str): The search query for torrents.
+    - filters (dict): Dictionary of filters, including page, min_seeds, min_peers, max_pages, min_size, max_size, and exclude_keywords.
+
+    Returns:
+    - tuple: A tuple containing a list of torrent details and a list of magnet links.
+    """
     if filters is None:
         filters = {}
 
@@ -97,10 +125,7 @@ def search_torrents(search_query, filters=None):
         if not torrent_details:
             return [], []
 
-        # Extracting magnet links from the torrent details
-        magnet_links = [torrent['MagnetLink'] for torrent in torrent_details]
-
-        return torrent_details, magnet_links
+        return torrent_details
 
     except Exception as e:
         print(f"Error during the search for torrents: {e}")
