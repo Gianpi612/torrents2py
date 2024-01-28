@@ -82,7 +82,7 @@ filters = {
     'exclude_keywords': ['bella', 'ciao'],
     # Sort by seeds, peers and size (supports only 1 of them) - Default is None
     'sort_by': 'size',
-    # Sort order, you can pass 'desc' for descending and 'asc' for ascending - Default is None
+    # Sort order, you can pass 'desc' for descending and 'asc' for ascending - The default is None. However, if 'sort_order' isn't specified, the default is ascending ('asc')
     'sort_order': 'desc'
 }
 
