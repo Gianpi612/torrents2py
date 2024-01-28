@@ -19,7 +19,7 @@ def convert_to_int(value):
     - int: The converted integer value.
     """
     if 'K' in value:
-        return float(value[:-1]) * 1000
+        return int(float(value[:-1]) * 1000)
     else:
         try:
             return int(value)
