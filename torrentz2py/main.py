@@ -6,7 +6,8 @@ from torrents2py.utils import convert_to_int, convert_to_bytes
 def get_torrents(search_query, current_page=1, min_seeds=0, min_peers=0, max_pages=None, min_size=None, max_size=None,
                  exclude_keywords=None, sort_by=None, sort_order=None):
     """
-    Get torrent details and magnet links from Torrentz2. From torrents2py v0.5+ magnet links and torrents details are stored in the same dictionary
+    Get torrent details and magnet links from Torrentz2.
+    From torrents2py v0.5+ magnet links and torrents details are stored in the same dictionary
 
     Parameters:
     - search_query (str): The search query for torrents.
@@ -55,7 +56,7 @@ def get_torrents(search_query, current_page=1, min_seeds=0, min_peers=0, max_pag
                     file_size_bytes = convert_to_bytes(size)
                     if (min_size is None or file_size_bytes >= convert_to_bytes(min_size)) and (
                             max_size is None or file_size_bytes <= convert_to_bytes(
-                        max_size)) and seeds is not None and seeds >= min_seeds and peers >= min_peers:
+                            max_size)) and seeds is not None and seeds >= min_seeds and peers >= min_peers:
                         torrent_details.append({
                             "Title": title,
                             "Uploaded": uploaded,
@@ -98,7 +99,7 @@ def search_torrents(search_query, filters=None):
 
     Parameters:
     - search_query (str): The search query for torrents.
-    - filters (dict): Dictionary of filters, including page, min_seeds, min_peers, max_pages, min_size, max_size, and exclude_keywords.
+    - filters (dict): Dictionary of filters, including page, min_seeds, min_peers, max_pages, min_size, max_size, exclude_keywords and more.
 
     Returns:
     - tuple: A tuple containing a list of torrent details and a list of magnet links.
@@ -123,10 +124,11 @@ def search_torrents(search_query, filters=None):
         )
 
         if not torrent_details:
-            return [], []
+            return []
 
         return torrent_details
 
     except Exception as e:
-        print(f"Error during the search for torrents: {e}")
-        return [], []
+        import traceback
+        traceback.print_exc()
+        print(f"Errore durante la ricerca dei torrent: {e}")
