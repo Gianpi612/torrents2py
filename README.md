@@ -27,10 +27,9 @@ If you wish to search for torrents, it's as straightforward as:
 ```python
 from torrents2py import search_torrents
 
-# The search_torrents function returns a tuple with two elements:
+# The search_torrents function returns a tuple with one element:
 # - results: a list of dictionaries, each containing information about a torrent,
-#            including Title, Uploaded, Size, Seeds, Peers, etc.
-# - magnet_links: a list of magnet links corresponding to each torrent in the results.
+#            including Title, Uploaded, Size, Seeds, Peers and magnet links.
 
 results = search_torrents("Search input")
 
@@ -47,13 +46,13 @@ results = search_torrents("Search input")
 # Print Title, upload time, size, seeds, peers and magnet_links
 print("\nSearch Results:")
 for index, result in enumerate(results, start=1):
-    print(f"\nTorrent {index} Information:\n"
-          f"   Title:    {result['Title']}\n"
-          f"   Uploaded: {result['Uploaded']}" + " ago\n"
-          f"   Size:     {result['Size']}\n"
-          f"   Seeds:    {result['Seeds']}\n"
-          f"   Peers:    {result['Peers']}\n"
-          f"   Magnet Link: {magnet_links[index - 1]}\n")
+    print(f"Torrent {index} Information:"
+            f"\n   Title:    {result.get('Title')}"
+            f"\n   Uploaded: {result.get('Uploaded')}"
+            f"\n   Size:     {result.get('Size')}"
+            f"\n   Seeds:    {result.get('Seeds')}"
+            f"\n   Peers:    {result.get('Peers')}"
+            f"\n   Magnet Link:    {result.get('MagnetLink')}")
 ```
 
 ## Search with filters
@@ -89,13 +88,13 @@ results = search_torrents("Search input", filters)
 
 print("\nFiltered Search Results:")
 for index, result in enumerate(results, start=1):
-    print(f"\nTorrent {index} Information:\n"
-          f"   Title:    {result['Title']}\n"
-          f"   Uploaded: {result['Uploaded']}\n"
-          f"   Size:     {result['Size']}\n"
-          f"   Seeds:    {result['Seeds']}\n"
-          f"   Peers:    {result['Peers']}\n"
-          f"   Magnet Link: {magnet_links[index - 1]}\n")
+    print(f"Torrent {index} Information:"
+            f"\n   Title:    {result.get('Title')}"
+            f"\n   Uploaded: {result.get('Uploaded')}"
+            f"\n   Size:     {result.get('Size')}"
+            f"\n   Seeds:    {result.get('Seeds')}"
+            f"\n   Peers:    {result.get('Peers')}"
+            f"\n   Magnet Link:    {result.get('MagnetLink')}")
 
 
 ```
