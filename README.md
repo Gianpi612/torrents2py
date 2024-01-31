@@ -61,25 +61,23 @@ If you wish to search your torrent with specific filters, such as minimum seeds,
 ```python
 # Filters, as of torrents2py latest version these are all the suppported filters:
 filters = {
-    # Filter torrents with a minimum of 2 seeds - Default is 0
+    # Filter torrents with a minimum and maximum of 2 seeds - Default is 0
     'min_seeds': 2,
-    # Filter torrents with a minimum of 2 peers - Default is 0
-    'min_peers': 2,
-    # Filter torrents with a minimum of 7 GB - Default is 0 bites
+    'max_peers': 2,
+    # Filter torrents with a minimum of 7 GB and maximum of 10GB
     # both min_size and max_size support B, KB, MB, GB, TB. (case-insensitive as shown)
     'min_size': '7Gb',
-    # Filter torrents with a maximum of 10 GB - Default is unlimited
     'max_size': '10gB',
-    # Specify the page number for torrent search results - Default is 1
+    # Specify the page number for torrent search results
     'page': 1,
     # Set the maximum number of pages to retrieve for torrent search results
     # - If max page is not provided it will only fetch 1 page of torrents
     'max_pages': 50,
     # Exclude specific words from the search
     'exclude_keywords': ['bella', 'ciao'],
-    # Sort by seeds, peers and size (supports only 1 of them) - Default is None
+    # Sort by seeds, peers and size (supports only 1 of them)
     'sort_by': 'size',
-    # Sort order, you can pass 'desc' for descending and 'asc' for ascending - The default is None. However, if 'sort_order' isn't specified, the default is ascending ('asc')
+    # Sort order, you can pass 'desc' for descending and 'asc' for ascending
     'sort_order': 'desc'
 }
 
