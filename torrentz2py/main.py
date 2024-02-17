@@ -1,10 +1,10 @@
 import requests
 from bs4 import BeautifulSoup
-from torrents2py.utils import convert_to_int, convert_to_bytes
+from torrents2py.utils import convert_to_int, convert_to_bytes, convert_to_seconds
 
 
 def get_torrents(search_query, current_page=1, min_seeds=0, min_peers=0, max_pages=None, min_size=None, max_size=None,
-                 exclude_keywords=None, sort_by=None, sort_order=None):
+                 exclude_keywords=None, sort_by=None, sort_order=None, min_upload=None, max_upload=None):
     """
     Get torrent details and magnet links from Torrentz2.
     From torrents2py v0.5+ magnet links and torrents details are stored in the same dictionary
@@ -22,7 +22,7 @@ def get_torrents(search_query, current_page=1, min_seeds=0, min_peers=0, max_pag
     - sort_order (str): The order of sorting, either 'asc' (ascending) or 'desc' (descending).
 
     Returns:
-    - tuple: A tuple containing a list of torrent details and a list of magnet links.
+    - tuple: A tuple containing a list of torrent details.
     """
     base_url = 'https://torrentz2.nz/search?q=' + search_query
     torrent_details = []
@@ -30,7 +30,7 @@ def get_torrents(search_query, current_page=1, min_seeds=0, min_peers=0, max_pag
     try:
         for page in range(current_page, current_page + (max_pages or 1)):
             current_url = f"{base_url}&page={page}"
-            response = requests.get(current_url)
+            response = requests.get(current_url, timeout=5)
             response.raise_for_status()
 
             soup = BeautifulSoup(response.text, 'html.parser')
@@ -54,9 +54,12 @@ def get_torrents(search_query, current_page=1, min_seeds=0, min_peers=0, max_pag
                     magnet_link = magnet_span.find('a')['href']
 
                     file_size_bytes = convert_to_bytes(size)
+                    uploaded_seconds = convert_to_seconds(uploaded)
                     if (min_size is None or file_size_bytes >= convert_to_bytes(min_size)) and (
                             max_size is None or file_size_bytes <= convert_to_bytes(
-                            max_size)) and seeds is not None and seeds >= min_seeds and peers >= min_peers:
+                        max_size)) and seeds is not None and seeds >= min_seeds and peers >= min_peers \
+                            and (max_upload is None or uploaded_seconds >= convert_to_seconds(min_upload)) \
+                            and (min_upload is None or uploaded_seconds <= convert_to_seconds(max_upload)):
                         torrent_details.append({
                             "Title": title,
                             "Uploaded": uploaded,
@@ -69,12 +72,19 @@ def get_torrents(search_query, current_page=1, min_seeds=0, min_peers=0, max_pag
             sorting_functions = {
                 'seeds': lambda x: x['Seeds'],
                 'peers': lambda x: x['Peers'],
-                'size': lambda x: convert_to_bytes(x['Size'])
+                'size': lambda x: convert_to_bytes(x['Size']),
+                'upload': lambda x: convert_to_seconds(x['Uploaded'])
             }
 
-            if sort_by in sorting_functions:
-                torrent_details = sorted(torrent_details, key=sorting_functions[sort_by],
-                                         reverse=(sort_order == 'desc'))
+            if sort_by:
+                sort_order_reverse = (sort_order == 'desc')
+                for key in reversed(sort_by):
+                    if key in sorting_functions:
+                        torrent_details = sorted(torrent_details, key=sorting_functions[key],
+                                                 reverse=sort_order_reverse)
+
+    except requests.exceptions.Timeout:
+        print("Timed out")
 
     except requests.exceptions.RequestException as e:
         print(f"Error in the HTTP request: {e}\n"
@@ -102,7 +112,7 @@ def search_torrents(search_query, filters=None):
     - filters (dict): Dictionary of filters, including page, min_seeds, min_peers, max_pages, min_size, max_size, exclude_keywords and more.
 
     Returns:
-    - tuple: A tuple containing a list of torrent details and a list of magnet links.
+    - tuple: A tuple containing a list of torrent details.
     """
     if filters is None:
         filters = {}
@@ -116,11 +126,14 @@ def search_torrents(search_query, filters=None):
     exclude_keywords = filters.get('exclude_keywords')
     sort_by = filters.get('sort_by')
     sort_order = filters.get('sort_order')
+    min_upload = filters.get('min_upload')
+    max_upload = filters.get('max_upload')
 
     try:
         torrent_details = get_torrents(
             search_query, page, min_seeds, min_peers, max_pages, min_size=min_size, max_size=max_size,
-            exclude_keywords=exclude_keywords, sort_by=sort_by, sort_order=sort_order
+            exclude_keywords=exclude_keywords, sort_by=sort_by, sort_order=sort_order, min_upload=min_upload,
+            max_upload=max_upload
         )
 
         if not torrent_details:
@@ -129,6 +142,4 @@ def search_torrents(search_query, filters=None):
         return torrent_details
 
     except Exception as e:
-        import traceback
-        traceback.print_exc()
-        print(f"Errore durante la ricerca dei torrent: {e}")
+        print(f"Error during the search of Torrents: {e}")
